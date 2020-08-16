@@ -95,7 +95,7 @@ class Network(object):
 
     def evaluate(self, test_data): 
         # return the number of correct outputs 
-        test_results = [(np.argmax(self.feedforward(x), y)) for (x, y) in test_data]
+        test_results = [(np.argmax(self.feedforward(x)), y) for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
 
 def sigmoid(z): 

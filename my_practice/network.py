@@ -31,9 +31,12 @@ class Network(object):
         # 
         # if test data is provided, the network will be evaluated after each epoch of training 
         
+        training_data = list(training_data)
+        n = len(training_data)
+        
         if test_data: 
+            test_data = list(test_data)
             n_test = len(test_data)
-            n = len(training_data)
 
         for j in xrange(epochs): 
             np.random.shuffle(training_data)

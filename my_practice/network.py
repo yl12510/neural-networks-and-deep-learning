@@ -11,16 +11,9 @@ class Network(object):
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]] # no biases for the input layer 
         self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
 
-    def sigmoid(z): 
-        # define sigmoid function
-        return 1.0/(1.0+np.exp(-z)) 
-
-    def sigmoid_prime(z): 
-        return sigmoid(z) * (1 - sigmoid(z))
-
     def feedforward(self, a): 
         # for an input, compute the output of network based on the current weights and bias
-        for w, b in zip(self.weights, self.bias): 
+        for w, b in zip(self.weights, self.biases): 
             a = sigmoid(np.dot(w,a) + b)
         return a
 
@@ -33,14 +26,14 @@ class Network(object):
         
         training_data = list(training_data)
         n = len(training_data)
-        
+
         if test_data: 
             test_data = list(test_data)
             n_test = len(test_data)
 
-        for j in xrange(epochs): 
+        for j in range(epochs): 
             np.random.shuffle(training_data)
-            mini_batches = [training_data[k:k+mini_batch_size] for k in xrange(0, n, mini_batch_size)]
+            mini_batches = [training_data[k:k+mini_batch_size] for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches: 
                 self.update_mini_batch(mini_batch, eta)
             if test_data: 
@@ -88,7 +81,7 @@ class Network(object):
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
 
         # from the second last layer
-        for l in xrange (2, self.num_layers): 
+        for l in range(2, self.num_layers): 
             z = zs[-l]
             sp = sigmoid_prime(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
@@ -104,4 +97,10 @@ class Network(object):
         # return the number of correct outputs 
         test_results = [(np.argmax(self.feedforward(x), y)) for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
-    
+
+def sigmoid(z): 
+    # define sigmoid function
+    return 1.0/(1.0+np.exp(-z)) 
+
+def sigmoid_prime(z): 
+    return sigmoid(z) * (1 - sigmoid(z))
